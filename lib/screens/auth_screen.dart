@@ -1,207 +1,208 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:web_chat/router/app_route_information_parser.dart';
-import 'package:web_chat/router/app_router_delegate.dart';
+import 'package:web_chat/responsive.dart';
 
-class AuthorizationScreen extends StatelessWidget {
-  final pageController = PageController();
-
+class AuthorizationScreen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final width = Responsive.isDesktop(context)
+        ? (Responsive.width(context) / 3)
+        : Responsive.width(context);
+    final height = Responsive.isDesktop(context)
+        ? (Responsive.height(context) / 2)
+        : Responsive.height(context);
     return Scaffold(
-      body: PageView(
-        controller: pageController,
-        physics: NeverScrollableScrollPhysics(),
+      body: Stack(
         children: [
-          PhonePart(pageController),
-          AccessProfile(pageController),
+          Column(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Container(
+                  color: Color(0xFF5682A3),
+                ),
+              ),
+              Expanded(
+                flex: 4,
+                child: Container(
+                  color: Color(0xFFE7EBF0),
+                ),
+              ),
+            ],
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Responsive(
+              mobile: RegisterDesktop(
+                minMax: false,
+              ),
+              tablet: RegisterDesktop(
+                minMax: false,
+              ),
+              desktop: IntrinsicWidth(
+                child: IntrinsicHeight(
+                  child: RegisterDesktop(
+                    minMax: true,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class PhonePart extends StatelessWidget {
-  final PageController pageController;
-
-  PhonePart(this.pageController);
-
+class RegisterDesktop extends ConsumurWidget {
   final _formKey = GlobalKey<FormState>();
 
   final _telephoneController = TextEditingController(
     text: "+998",
   );
+  final bool minMax;
+
+  RegisterDesktop({@required this.minMax});
 
   void nextPage() {
-    if (_formKey.currentState.validate()) {
-      pageController.nextPage(
-          duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
-    }
+    if (_formKey.currentState.validate()) {}
   }
 
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Center(
+      child: Container(
+        color: Colors.white,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "Your Phone Number",
-              style: TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Text(
-              "Please enter your mobile phone number",
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
-            SizedBox(
-              height: 150,
-            ),
-            SizedBox(
-              width: 300.0,
-              child: TextFormField(
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp('[0-9+]'))
-                ],
-                validator: (value) {
-                  if (value.length < 4) {
-                    return "Invalid telephone";
-                  }
-                  return null;
-                },
-                controller: _telephoneController,
-                style: TextStyle(
-                  fontSize: 30.0,
+            Center(
+              child: Container(
+                color: Color(0xFF5682A3),
+                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.send_outlined,
+                            size: 30.0,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 15.0,
+                          ),
+                          Text(
+                            "WebChat",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Spacer(
+                      flex: 4,
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Row(
+                          children: [
+                            Text(
+                              "Next",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30.0,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5.0,
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                decoration: InputDecoration(
-                  focusColor: Colors.blue,
-                  errorStyle: TextStyle(
-                    fontSize: 20.0,
-                  ),
-                ),
               ),
             ),
             SizedBox(
-              height: 40.0,
+              height: 15.0,
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.all(20),
-              ),
-              onPressed: () {
-                nextPage();
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+            Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    "Authorization",
-                    style: TextStyle(fontSize: 30.0),
+                  SizedBox(
+                    height: minMax ? 40.0 : 180.0,
                   ),
-                  Icon(
-                    Icons.chevron_right_sharp,
+                  SelectableText(
+                    "Sign In",
+                    style:
+                        TextStyle(fontSize: 45.0, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 30.0,
+                  ),
+                  SelectableText(
+                    "Enter your full phone number.",
+                    style: TextStyle(fontSize: 25.0),
+                  ),
+                  SizedBox(
+                    height: 30.0,
+                  ),
+                  SelectableText(
+                    "Uzbekistan",
+                    style:
+                        TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 40.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: TextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp('[0-9+]'))
+                      ],
+                      validator: (value) {
+                        if (value.length < 4) {
+                          return "Invalid telephone";
+                        }
+                        return null;
+                      },
+                      style: TextStyle(
+                        fontSize: 30.0,
+                      ),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 30),
+                        focusColor: Colors.blue,
+                        errorStyle: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      ),
+                      controller: _telephoneController,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 100.0,
                   ),
                 ],
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class AccessProfile extends StatelessWidget {
-  final PageController pageController;
-
-  AccessProfile(this.pageController);
-
-  final _formKey = GlobalKey<FormState>();
-
-  final _keyController = TextEditingController();
-
-  void previousPage() {
-    pageController.previousPage(
-        duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
-  }
-
-  void nextScreen(BuildContext context) {
-    if (_formKey.currentState.validate()) {
-      (Router.of(context).routerDelegate as MyRouterDelegate).configuration =
-          MyRoutes.profileScreen;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: IconButton(
-              onPressed: () {
-                previousPage();
-              },
-              icon: Icon(Icons.arrow_back),
-            ),
-          ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 300.0,
-                  child: TextFormField(
-                    style: TextStyle(
-                      fontSize: 30.0,
-                    ),
-                    controller: _keyController,
-                    validator: (value) {
-                      if (value.length < 4) {
-                        return "Invalid Key";
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(20),
-                  ),
-                  onPressed: () {
-                    nextScreen(context);
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Start Chatting",
-                        style: TextStyle(fontSize: 30.0),
-                      ),
-                      Icon(
-                        Icons.chevron_right_sharp,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
