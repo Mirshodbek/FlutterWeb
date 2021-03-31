@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_chat/model/authorization.dart';
+import 'package:web_chat/widgets/widgets.dart';
 
 class DataWidget extends StatelessWidget {
   final TextEditingController nameController;
@@ -39,16 +39,11 @@ class DataWidget extends StatelessWidget {
           ),
           SizedBox(
             height: 50.0,
-            child: TextFormField(
+            child: TextField(
+              key: UniqueKey(),
               style: TextStyle(
                 fontSize: 20.0,
               ),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return "Invalid name";
-                }
-                return null;
-              },
               decoration: InputDecoration(hintText: "Full Name"),
               controller: nameController,
             ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:web_chat/model/authorization.dart';
+import 'package:web_chat/widgets/widgets.dart';
 
 class CodeAuth extends StatelessWidget {
   final Authorization auth;
@@ -71,7 +71,8 @@ class CodeAuth extends StatelessWidget {
         ),
         SizedBox(
           width: width,
-          child: TextFormField(
+          child: TextField(
+            maxLength: 4,
             controller: codeController,
             style: TextStyle(
               fontSize: 30.0,
@@ -91,6 +92,9 @@ class CodeAuth extends StatelessWidget {
               FilteringTextInputFormatter.allow(RegExp('[0-9]'))
             ],
           ),
+        ),
+        Text(
+          auth.randomCodes.toString(),
         ),
         SizedBox(
           height: 50.0,

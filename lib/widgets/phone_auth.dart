@@ -39,17 +39,12 @@ class PhoneAuth extends StatelessWidget {
         ),
         SizedBox(
           width: width,
-          child: TextFormField(
+          child: TextField(
+            maxLength: 13,
             key: UniqueKey(),
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp('[0-9+]'))
             ],
-            validator: (value) {
-              if (value.length < 4) {
-                return "Invalid telephone";
-              }
-              return null;
-            },
             style: TextStyle(
               fontSize: 30.0,
             ),

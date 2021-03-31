@@ -1,0 +1,12 @@
+export 'package:web_chat/model/authorization.dart';
+export 'package:web_chat/model_view/authorization_vm.dart';
+export 'package:web_chat/responsive.dart';
+export 'package:web_chat/router/app_route_information_parser.dart';
+export 'package:web_chat/router/app_router_delegate.dart';
+export 'package:web_chat/widgets/code_auth.dart';
+export 'package:web_chat/widgets/data_auth.dart';
+export 'package:web_chat/widgets/header_auth.dart';
+export 'package:web_chat/widgets/header_profile.dart';
+export 'package:web_chat/widgets/left_column_profile.dart';
+export 'package:web_chat/widgets/phone_auth.dart';
+export 'package:web_chat/widgets/right_column_profile.dart';

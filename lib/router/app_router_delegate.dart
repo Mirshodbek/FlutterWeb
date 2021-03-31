@@ -42,9 +42,15 @@ class MyRouterDelegate extends RouterDelegate<MyRoutes>
     return Navigator(
       key: navigatorKey,
       pages: <Page<void>>[
-        MaterialPage(key: ValueKey('register'), child: AuthorizationScreen()),
+        MaterialPage(
+          key: ValueKey('register'),
+          child: AuthorizationScreen(),
+        ),
         if (configuration == MyRoutes.profileScreen)
-          MaterialPage(key: ValueKey('profile'), child: ProfileScreen()),
+          MaterialPage(
+            key: ValueKey('profile'),
+            child: ProfileScreen(),
+          ),
       ],
       onPopPage: _handlePopPage,
     );

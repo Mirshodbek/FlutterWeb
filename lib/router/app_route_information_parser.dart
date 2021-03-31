@@ -10,10 +10,10 @@ class AppRouteInformationParser extends RouteInformationParser<MyRoutes> {
       case "/register":
         return MyRoutes.registerScreen;
         break;
+
       case "/profile":
         return MyRoutes.profileScreen;
         break;
-
       default:
         return MyRoutes.registerScreen;
     }
@@ -24,6 +24,7 @@ class AppRouteInformationParser extends RouteInformationParser<MyRoutes> {
     switch (configuration) {
       case MyRoutes.registerScreen:
         return const RouteInformation(location: '/register');
+
       case MyRoutes.profileScreen:
         return const RouteInformation(location: '/profile');
     }

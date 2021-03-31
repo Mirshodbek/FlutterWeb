@@ -1,16 +1,128 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:web_chat/responsive.dart';
+import 'dart:convert';
 
-class AuthorizationScreen2 extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:universal_html/html.dart' as html;
+import 'package:web_chat/screens/screens.dart';
+
+enum PhotoOptions { camera, library }
+
+class AuthorizationScreen extends ConsumerWidget {
+  final _telephoneController = TextEditingController(
+    text: "+998",
+  );
+  final _codeController = TextEditingController();
+  final _nameController = TextEditingController();
+
+  Widget _alertDialog(BuildContext context, String telephone) {
+    return AlertDialog(
+      actionsPadding: EdgeInsets.all(10.0),
+      titlePadding: EdgeInsets.all(20.0),
+      title: Text(
+        "Is it correct?",
+        style: TextStyle(
+          fontSize: 40.0,
+        ),
+      ),
+      content: Text(
+        telephone,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () async {
+            await context
+                .read(authorizationPro)
+                .telephoneStep(telephone: telephone);
+            Navigator.pop(context);
+          },
+          child: Text(
+            "Ok",
+            style: TextStyle(fontSize: 20.0),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            context
+                .read(authorizationPro)
+                .pageAuth(pageAuth: PageAuth.phonePage);
+            Navigator.pop(context);
+          },
+          child: Text(
+            "Cancel",
+            style: TextStyle(fontSize: 20.0),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void nextPage(BuildContext context, Authorization auth) async {
+    final _telephone = _telephoneController.text;
+    final _code = _codeController.text;
+    final _name = _nameController.text;
+    if (auth.pageAuth == PageAuth.phonePage) {
+      if (_telephone.length >= 13) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return _alertDialog(context, _telephone);
+          },
+        );
+      }
+    }
+    if (auth.pageAuth == PageAuth.codePage) {
+      if (_code == auth.randomCodes.toString()) {
+        await context.read(authorizationPro).codeStep(code: _code);
+      }
+    }
+
+    if (auth.pageAuth == PageAuth.dataPage) {
+      if (_name.isNotEmpty) {
+        await context.read(authorizationPro).dataStep(name: _name);
+        (Router.of(context).routerDelegate as MyRouterDelegate).configuration =
+            MyRoutes.profileScreen;
+      }
+    }
+  }
+
+  void previousPage(BuildContext context) {
+    context.read(authorizationPro).pageAuth(pageAuth: PageAuth.phonePage);
+  }
+
+  void pickImage(BuildContext context) {
+    final html.InputElement input = html.document.createElement('input');
+    input
+      ..type = 'file'
+      ..accept = 'image/*';
+
+    input.onChange.listen((e) {
+      if (input.files.isEmpty) return;
+      final reader = html.FileReader();
+      reader.readAsDataUrl(input.files.first);
+      reader.onError.listen((err) {
+        context.read(authorizationPro).photoUser(errorPhoto: err.toString());
+      });
+      reader.onLoad.first.then((res) {
+        final encoded = reader.result as String;
+        final stripped =
+            encoded.replaceFirst(RegExp(r'data:image/[^;]+;base64,'), '');
+        context.read(authorizationPro).photoUser(
+              pathPhoto: input.files.first.name,
+              dataPhoto: base64.decode(stripped),
+              errorPhoto: '',
+            );
+      });
+    });
+
+    input.click();
+  }
+
   @override
-  Widget build(BuildContext context) {
-    final width = Responsive.isDesktop(context)
-        ? (Responsive.width(context) / 3)
-        : Responsive.width(context);
-    final height = Responsive.isDesktop(context)
-        ? (Responsive.height(context) / 2)
-        : Responsive.height(context);
+  Widget build(BuildContext context, watch) {
+    final auth = watch(authorizationPro.state);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -32,177 +144,82 @@ class AuthorizationScreen2 extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.center,
-            child: Responsive(
-              mobile: RegisterDesktop(
-                minMax: false,
-              ),
-              tablet: RegisterDesktop(
-                minMax: false,
-              ),
-              desktop: IntrinsicWidth(
-                child: IntrinsicHeight(
-                  child: RegisterDesktop(
-                    minMax: true,
+            child: SingleChildScrollView(
+              child: Container(
+                color: Colors.white,
+                child: Responsive(
+                  desktop: IntrinsicHeight(
+                    child: IntrinsicWidth(
+                      child: Column(
+                        children: [
+                          HeaderAuth(
+                            () => nextPage(context, auth),
+                          ),
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          if (auth.pageAuth == PageAuth.phonePage)
+                            PhoneAuth(
+                              telephoneController: _telephoneController,
+                              width: 300.0,
+                              height: 40.0,
+                            ),
+                          if (auth.pageAuth == PageAuth.codePage)
+                            CodeAuth(
+                              auth: auth,
+                              previousPage: () => previousPage(context),
+                              codeController: _codeController,
+                              width: 150.0,
+                              height: 40.0,
+                            ),
+                          if (auth.pageAuth == PageAuth.dataPage)
+                            DataWidget(
+                              auth: auth,
+                              selectImage: () => pickImage(context),
+                              nameController: _nameController,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  mobile: SizedBox(
+                    height: Responsive.height(context),
+                    child: Column(
+                      children: [
+                        HeaderAuth(
+                          () => nextPage(context, auth),
+                        ),
+                        SizedBox(
+                          height: 15.0,
+                        ),
+                        if (auth.pageAuth == PageAuth.phonePage)
+                          PhoneAuth(
+                            telephoneController: _telephoneController,
+                            width: 300.0,
+                            height: 180.0,
+                          ),
+                        if (auth.pageAuth == PageAuth.codePage)
+                          CodeAuth(
+                            auth: auth,
+                            previousPage: () => previousPage(context),
+                            codeController: _codeController,
+                            width: 150.0,
+                            height: 180.0,
+                          ),
+                        if (auth.pageAuth == PageAuth.dataPage)
+                          DataWidget(
+                            auth: auth,
+                            selectImage: () => pickImage(context),
+                            nameController: _nameController,
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class RegisterDesktop extends ConsumurWidget {
-  final _formKey = GlobalKey<FormState>();
-
-  final _telephoneController = TextEditingController(
-    text: "+998",
-  );
-  final bool minMax;
-
-  RegisterDesktop({@required this.minMax});
-
-  void nextPage() {
-    if (_formKey.currentState.validate()) {}
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Container(
-        color: Colors.white,
-        child: Column(
-          children: [
-            Center(
-              child: Container(
-                color: Color(0xFF5682A3),
-                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                height: 50,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 4,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.send_outlined,
-                            size: 30.0,
-                            color: Colors.white,
-                          ),
-                          SizedBox(
-                            width: 15.0,
-                          ),
-                          Text(
-                            "WebChat",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Spacer(
-                      flex: 4,
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: TextButton(
-                        onPressed: () {},
-                        child: Row(
-                          children: [
-                            Text(
-                              "Next",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30.0,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5.0,
-                            ),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 15.0,
-            ),
-            Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: minMax ? 40.0 : 180.0,
-                  ),
-                  SelectableText(
-                    "Sign In",
-                    style:
-                        TextStyle(fontSize: 45.0, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                  SelectableText(
-                    "Enter your full phone number.",
-                    style: TextStyle(fontSize: 25.0),
-                  ),
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                  SelectableText(
-                    "Uzbekistan",
-                    style:
-                        TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    height: 40.0,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: TextFormField(
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp('[0-9+]'))
-                      ],
-                      validator: (value) {
-                        if (value.length < 4) {
-                          return "Invalid telephone";
-                        }
-                        return null;
-                      },
-                      style: TextStyle(
-                        fontSize: 30.0,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 30),
-                        focusColor: Colors.blue,
-                        errorStyle: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                      ),
-                      controller: _telephoneController,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 100.0,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:web_chat/widgets/widgets.dart';
 
-class LeftColumn extends StatelessWidget {
+class LeftColumn extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, watch) {
+    final profiles = watch(listProfilePro.state).toList();
+    final profile = watch(profilePro.state);
     return SizedBox(
       width: 350,
       child: Column(
@@ -29,6 +33,51 @@ class LeftColumn extends StatelessWidget {
                   borderSide: BorderSide(color: Colors.white),
                 ),
               ),
+            ),
+          ),
+          Divider(
+            height: 2.0,
+          ),
+          Expanded(
+            child: ListView.separated(
+              separatorBuilder: (context, index) => Divider(
+                height: 10.0,
+              ),
+              itemCount: profiles.length,
+              itemBuilder: (context, index) {
+                final profileUser = profiles[index];
+                return TextButton(
+                  onPressed: () => context.read(profilePro).index(index: index),
+                  style: TextButton.styleFrom(
+                    backgroundColor:
+                        profile.index == index ? Colors.blue : Colors.white,
+                  ),
+                  child: ProfileUser(
+                    index: index,
+                    profiles: profileUser,
+                    textWidget: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "You:",
+                            style: textStyleIndex(
+                                index: profile.index == index,
+                                firstColor: Colors.white,
+                                secondColor: Colors.blue),
+                          ),
+                          TextSpan(
+                            text: " Rahmat Yaxshi",
+                            style: textStyleIndex(
+                                index: profile.index == index,
+                                firstColor: Colors.white,
+                                secondColor: Colors.black38),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
