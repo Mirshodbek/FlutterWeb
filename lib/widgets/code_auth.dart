@@ -8,6 +8,7 @@ class CodeAuth extends StatelessWidget {
   final TextEditingController codeController;
   final double width;
   final double height;
+  final String invalidCode;
 
   CodeAuth({
     this.auth,
@@ -15,6 +16,7 @@ class CodeAuth extends StatelessWidget {
     this.codeController,
     this.width,
     this.height,
+    this.invalidCode,
   });
 
   @override
@@ -78,6 +80,7 @@ class CodeAuth extends StatelessWidget {
               fontSize: 30.0,
             ),
             decoration: InputDecoration(
+              errorText: invalidCode,
               hintStyle: TextStyle(
                 fontSize: 20.0,
               ),

@@ -2,8 +2,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-
-enum PageAuth { phonePage, codePage, dataPage }
+import 'package:web_chat/model/model.dart';
 
 @immutable
 class Authorization {
@@ -27,12 +26,12 @@ class Authorization {
       this.errorPhoto});
 
   Authorization.initial()
-      : telephone = '',
-        code = '',
-        name = '',
+      : telephone = null,
+        code = null,
+        name = null,
         pageAuth = PageAuth.phonePage,
-        pathPhoto = '',
-        errorPhoto = '',
+        pathPhoto = null,
+        errorPhoto = null,
         dataPhoto = null;
 
   Authorization copyWith(

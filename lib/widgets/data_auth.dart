@@ -5,8 +5,10 @@ class DataWidget extends StatelessWidget {
   final TextEditingController nameController;
   final Function selectImage;
   final Authorization auth;
+  final String emptyName;
 
-  DataWidget({this.nameController, this.selectImage, this.auth});
+  DataWidget(
+      {this.nameController, this.selectImage, this.auth, this.emptyName});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,10 @@ class DataWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 20.0,
               ),
-              decoration: InputDecoration(hintText: "Full Name"),
+              decoration: InputDecoration(
+                errorText: emptyName,
+                hintText: "Full Name",
+              ),
               controller: nameController,
             ),
           ),

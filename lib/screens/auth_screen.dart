@@ -6,8 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:web_chat/screens/screens.dart';
 
-enum PhotoOptions { camera, library }
-
 class AuthorizationScreen extends ConsumerWidget {
   final _telephoneController = TextEditingController(
     text: "+998",
@@ -46,7 +44,7 @@ class AuthorizationScreen extends ConsumerWidget {
           onPressed: () {
             context
                 .read(authorizationPro)
-                .pageAuth(pageAuth: PageAuth.phonePage);
+                .pageAuth(pageAuth: PageAuth.codePage);
             Navigator.pop(context);
           },
           child: Text(
@@ -62,6 +60,7 @@ class AuthorizationScreen extends ConsumerWidget {
     final _telephone = _telephoneController.text;
     final _code = _codeController.text;
     final _name = _nameController.text;
+
     if (auth.pageAuth == PageAuth.phonePage) {
       if (_telephone.length >= 13) {
         showDialog(
@@ -70,11 +69,17 @@ class AuthorizationScreen extends ConsumerWidget {
             return _alertDialog(context, _telephone);
           },
         );
+      } else {
+        context.read(helperAuthPro).invalidPhone();
       }
     }
+
     if (auth.pageAuth == PageAuth.codePage) {
       if (_code == auth.randomCodes.toString()) {
         await context.read(authorizationPro).codeStep(code: _code);
+      } else {
+        _codeController.clear();
+        context.read(helperAuthPro).invalidCode();
       }
     }
 
@@ -83,6 +88,8 @@ class AuthorizationScreen extends ConsumerWidget {
         await context.read(authorizationPro).dataStep(name: _name);
         (Router.of(context).routerDelegate as MyRouterDelegate).configuration =
             MyRoutes.profileScreen;
+      } else {
+        context.read(helperAuthPro).emptyName();
       }
     }
   }
@@ -122,6 +129,7 @@ class AuthorizationScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, watch) {
     final auth = watch(authorizationPro.state);
+    final helperAuth = watch(helperAuthPro.state);
 
     return Scaffold(
       body: Stack(
@@ -160,12 +168,14 @@ class AuthorizationScreen extends ConsumerWidget {
                           ),
                           if (auth.pageAuth == PageAuth.phonePage)
                             PhoneAuth(
+                              invalidPhone: helperAuth.invalidPhone,
                               telephoneController: _telephoneController,
                               width: 300.0,
                               height: 40.0,
                             ),
                           if (auth.pageAuth == PageAuth.codePage)
                             CodeAuth(
+                              invalidCode: helperAuth.invalidCode,
                               auth: auth,
                               previousPage: () => previousPage(context),
                               codeController: _codeController,
@@ -174,6 +184,7 @@ class AuthorizationScreen extends ConsumerWidget {
                             ),
                           if (auth.pageAuth == PageAuth.dataPage)
                             DataWidget(
+                              emptyName: helperAuth.emptyName,
                               auth: auth,
                               selectImage: () => pickImage(context),
                               nameController: _nameController,
@@ -194,12 +205,14 @@ class AuthorizationScreen extends ConsumerWidget {
                         ),
                         if (auth.pageAuth == PageAuth.phonePage)
                           PhoneAuth(
+                            invalidPhone: helperAuth.invalidPhone,
                             telephoneController: _telephoneController,
                             width: 300.0,
                             height: 180.0,
                           ),
                         if (auth.pageAuth == PageAuth.codePage)
                           CodeAuth(
+                            invalidCode: helperAuth.invalidCode,
                             auth: auth,
                             previousPage: () => previousPage(context),
                             codeController: _codeController,
@@ -208,6 +221,7 @@ class AuthorizationScreen extends ConsumerWidget {
                           ),
                         if (auth.pageAuth == PageAuth.dataPage)
                           DataWidget(
+                            emptyName: helperAuth.emptyName,
                             auth: auth,
                             selectImage: () => pickImage(context),
                             nameController: _nameController,

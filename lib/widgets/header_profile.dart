@@ -5,8 +5,8 @@ import 'package:web_chat/widgets/widgets.dart';
 class HeaderProfile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, watch) {
-    // final profiles = watch(listContactsPro.state).toList();
-    // final index = watch(profilePro.state);
+    // final profiles = watch(listProfilePro.state).toList();
+    // final index = watch(helperPRPro.state);
     // final profileName = profiles[index.index];
     return Container(
       color: Color(0xFF497799),

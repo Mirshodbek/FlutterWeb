@@ -15,7 +15,7 @@ class ProfileUser extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, watch) {
-    final profile = watch(profilePro.state);
+    final profile = watch(helperPRPro.state);
 
     return Row(
       children: [

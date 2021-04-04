@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:web_chat/router/app_route_information_parser.dart';
+import 'package:web_chat/model/model.dart';
 import 'package:web_chat/screens/auth_screen.dart';
-import 'package:web_chat/screens/profile_screen.dart';
 
 class MyRouterDelegate extends RouterDelegate<MyRoutes>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<MyRoutes> {

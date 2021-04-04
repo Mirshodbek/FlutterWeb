@@ -4,12 +4,16 @@ import 'package:web_chat/screens/screens.dart';
 import 'package:web_chat/widgets/widgets.dart';
 
 class Contacts extends ConsumerWidget {
+  void _cancelDelete(BuildContext context) {
+    context.read(helperPRPro).editContact(Edit.noEdit);
+    context.read(listContactsPro).cancelDelete();
+  }
+
   @override
   Widget build(BuildContext context, watch) {
-    final profiles = watch(listContactsPro.state).toList();
-    final profileList = watch(listContactsPro.state);
-    final profileSelect = watch(profilePro);
-    final profile = watch(profilePro.state);
+    final contactListVM = watch(listContactsPro.state).toList();
+    final contactsVM = watch(listContactsPro);
+    final profile = watch(helperPRPro.state);
 
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
@@ -26,27 +30,37 @@ class Contacts extends ConsumerWidget {
                   "Contacts",
                   style: headerTextStyle,
                 ),
-                Row(
-                  children: [
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Edit",
-                        style: headerTextStyle,
+                if (profile.edit == Edit.noEdit)
+                  Row(
+                    children: [
+                      TextButton(
+                        onPressed: () =>
+                            context.read(helperPRPro).editContact(Edit.edit),
+                        child: Text(
+                          "Edit",
+                          style: headerTextStyle,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(
-                        "Close",
-                        style: headerTextStyle,
+                      SizedBox(
+                        width: 5.0,
                       ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(
+                          "Close",
+                          style: headerTextStyle,
+                        ),
+                      ),
+                    ],
+                  ),
+                if (profile.edit == Edit.edit)
+                  TextButton(
+                    onPressed: () => _cancelDelete(context),
+                    child: Text(
+                      "Cancel",
+                      style: headerTextStyle,
                     ),
-                  ],
-                )
+                  ),
               ],
             ),
           ),
@@ -54,6 +68,7 @@ class Contacts extends ConsumerWidget {
             padding: EdgeInsets.symmetric(vertical: 10.0),
             color: Colors.white,
             child: TextField(
+              onChanged: context.read(listContactsPro).search,
               autofocus: true,
               decoration: InputDecoration(
                 prefixIcon: Padding(
@@ -74,50 +89,69 @@ class Contacts extends ConsumerWidget {
         ],
       ),
       content: SingleChildScrollView(
-        child: Column(
-          children: [
-            for (int i = 0; i < profiles.length; i++)
-              TextButton(
-                key: ObjectKey(profiles[i]),
-                onPressed: () {
-                  // final select =
-                  context.read(listContactsPro).selectContact(index: i);
-                  // context.read(profilePro).isSelected(select);
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: Colors.white,
-                ),
-                child: SizedBox(
-                  width: Responsive.width(context) * 0.3,
+        physics: BouncingScrollPhysics(),
+        child: SizedBox(
+          width: Responsive.width(context) * 0.3,
+          child: Column(
+            children: [
+              for (int i = 0; i < contactListVM.length; i++)
+                TextButton(
+                  key: ObjectKey(contactListVM[i]),
+                  onPressed: () {
+                    if (profile.edit == Edit.edit)
+                      context.read(listContactsPro).selectContact(i);
+                    else
+                      return;
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: contactListVM[i].isSelected
+                        ? Colors.blue
+                        : Colors.white,
+                  ),
                   child: ProfileUser(
-                    profiles: profiles[i],
+                    profiles: contactListVM[i],
                     textWidget: Text(
                       "last seen recently",
                       style: TextStyle(color: Colors.black26),
                     ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
       actions: [
-        MaterialButton(
-          minWidth: Responsive.width(context) * 0.3,
-          onPressed: () {
-            context.read(listContactsPro).delete();
-            // showDialog(
-            //   context: context,
-            //   builder: (builder) {
-            //     return NewContact();
-            //   },
-            // );
-          },
-          child: Text(
-            "NEW CONTACT",
-            style: buttonStyle,
+        if (profile.edit == Edit.noEdit)
+          MaterialButton(
+            minWidth: Responsive.width(context) * 0.3,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (builder) {
+                return NewContact();
+              },
+            ),
+            child: Text(
+              "NEW CONTACT",
+              style: buttonStyle,
+            ),
           ),
-        ),
+        if (profile.edit == Edit.edit)
+          contactsVM.onPressed()
+              ? TextButton(
+                  onPressed: () => context.read(listContactsPro).delete(),
+                  child: Text(
+                    "Delete ${contactsVM.lengthDeletedContacts}",
+                    style: buttonStyle.copyWith(
+                      color: Colors.red,
+                    ),
+                  ),
+                )
+              : SelectableText(
+                  "Delete 0",
+                  style: buttonStyle.copyWith(
+                    color: Colors.red,
+                  ),
+                ),
       ],
       actionsPadding: EdgeInsets.only(bottom: 15.0),
     );

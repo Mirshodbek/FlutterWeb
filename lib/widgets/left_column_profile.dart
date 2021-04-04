@@ -6,16 +6,17 @@ class LeftColumn extends ConsumerWidget {
   @override
   Widget build(BuildContext context, watch) {
     final profiles = watch(listProfilePro.state).toList();
-    final profile = watch(profilePro.state);
+    final profile = watch(helperPRPro.state);
     return SizedBox(
-      width: 350,
+      width: 350.0,
       child: Column(
         children: [
           Container(
             color: Colors.white,
             height: 75.0,
             padding: EdgeInsets.all(16.0),
-            child: TextFormField(
+            child: TextField(
+              onChanged: context.read(listProfilePro).search,
               decoration: InputDecoration(
                 hintText: "Search",
                 hintStyle: TextStyle(color: Colors.black26),
@@ -47,7 +48,7 @@ class LeftColumn extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final profileUser = profiles[index];
                 return TextButton(
-                  onPressed: () => context.read(profilePro).index(index: index),
+                  onPressed: () => context.read(helperPRPro).index(index),
                   style: TextButton.styleFrom(
                     backgroundColor:
                         profile.index == index ? Colors.blue : Colors.white,
@@ -68,9 +69,10 @@ class LeftColumn extends ConsumerWidget {
                           TextSpan(
                             text: " Rahmat Yaxshi",
                             style: textStyleIndex(
-                                index: profile.index == index,
-                                firstColor: Colors.white,
-                                secondColor: Colors.black38),
+                              index: profile.index == index,
+                              firstColor: Colors.white,
+                              secondColor: Colors.black38,
+                            ),
                           ),
                         ],
                       ),

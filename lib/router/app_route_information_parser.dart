@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-enum MyRoutes { registerScreen, profileScreen }
+import 'package:web_chat/screens/screens.dart';
 
 class AppRouteInformationParser extends RouteInformationParser<MyRoutes> {
   @override
@@ -10,8 +9,7 @@ class AppRouteInformationParser extends RouteInformationParser<MyRoutes> {
       case "/register":
         return MyRoutes.registerScreen;
         break;
-
-      case "/profile":
+      case "/im?p=":
         return MyRoutes.profileScreen;
         break;
       default:
@@ -24,9 +22,8 @@ class AppRouteInformationParser extends RouteInformationParser<MyRoutes> {
     switch (configuration) {
       case MyRoutes.registerScreen:
         return const RouteInformation(location: '/register');
-
       case MyRoutes.profileScreen:
-        return const RouteInformation(location: '/profile');
+        return const RouteInformation(location: '/im?p=');
     }
     throw 'unknown';
   }

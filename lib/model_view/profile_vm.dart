@@ -1,24 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:web_chat/model/profile.dart';
 
 import 'model_vm.dart';
-
-class ProfileVM extends StateNotifier<Profile> {
-  ProfileVM(Profile state) : super(state);
-
-  int index({int index}) {
-    state = state.copyWith(index: index);
-    return super.state.index;
-  }
-
-  bool isSelected(bool select) {
-    state = state.copyWith(isSelected: select);
-
-    return super.state.isSelected;
-  }
-}
-
-final profilePro = StateNotifierProvider((_) => ProfileVM(Profile.initial()));
 
 class ListProfile extends StateNotifier<List<Profile>> {
   ListProfile([List<Profile> state]) : super(state ?? []);
@@ -27,6 +9,7 @@ class ListProfile extends StateNotifier<List<Profile>> {
     state = [
       ...state,
       Profile(
+          index: state.length + 1,
           isSelected: false,
           name: "Mirshod",
           photoPath:
@@ -34,10 +17,18 @@ class ListProfile extends StateNotifier<List<Profile>> {
     ];
   }
 
+  void search(String query) {
+    state = searchListView.where((contacts) {
+      final titleLower = contacts.name.toLowerCase();
+      final searchLower = query.toLowerCase();
+      return titleLower.contains(searchLower);
+    }).toList();
+  }
+
   int get length {
-    return super.state.length;
+    return state.length;
   }
 }
 
-final listProfilePro = StateNotifierProvider(
-    (ref) => ListProfile(ref.read(listContactsPro.state).toList()));
+final listProfilePro =
+    StateNotifierProvider((ref) => ListProfile(searchListView));

@@ -6,9 +6,9 @@ class RightColumn extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, watch) {
-    // final profiles = watch(listContactsPro.state).toList();
-    // final index = watch(profilePro.state);
-    // final profileName = profiles[index.index];
+    // final profiles = watch(listProfilePro.state).toList();
+    // final index = watch(helperPRPro.state);
+    // final userPhoto = profiles[index.index];
     return Expanded(
       child: Stack(
         children: [
@@ -153,7 +153,7 @@ class RightColumn extends ConsumerWidget {
                   SizedBox(
                     width: 15.0,
                   ),
-                  // circleAvatar(message.photoPath),
+                  // circleAvatar(userPhoto.photoPath),
                 ],
               ),
             ),

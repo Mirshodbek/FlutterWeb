@@ -5,8 +5,10 @@ class PhoneAuth extends StatelessWidget {
   final TextEditingController telephoneController;
   final double width;
   final double height;
+  final String invalidPhone;
 
-  PhoneAuth({this.telephoneController, this.width, this.height});
+  PhoneAuth(
+      {this.telephoneController, this.width, this.height, this.invalidPhone});
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,7 @@ class PhoneAuth extends StatelessWidget {
               fontSize: 30.0,
             ),
             decoration: InputDecoration(
+              errorText: invalidPhone,
               errorStyle: TextStyle(
                 fontSize: 20.0,
               ),

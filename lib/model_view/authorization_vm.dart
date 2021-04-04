@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:web_chat/model/authorization.dart';
+import 'package:web_chat/model_view/model_vm.dart';
 
 class AuthorizationVM extends StateNotifier<Authorization> {
   AuthorizationVM(Authorization state) : super(state);
@@ -17,7 +18,7 @@ class AuthorizationVM extends StateNotifier<Authorization> {
     } catch (e) {}
   }
 
-  Future<void> codeStep({String code}) async {
+  Future<void> codeStep({String code, PageAuth pageAuth}) async {
     state = state.copyWith(code: code);
     try {
       state = state.copyWith(pageAuth: PageAuth.dataPage);
@@ -36,7 +37,6 @@ class AuthorizationVM extends StateNotifier<Authorization> {
 
   void pageAuth({PageAuth pageAuth}) {
     state = state.copyWith(pageAuth: pageAuth);
-    // if (pageAuth == PageAuth.codePage) state.randomCodes;
   }
 }
 
