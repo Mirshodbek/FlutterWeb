@@ -8,7 +8,7 @@ import 'package:web_chat/screens/screens.dart';
 
 class AuthorizationScreen extends ConsumerWidget {
   final _telephoneController = TextEditingController(
-    text: "+9988",
+    text: "+998",
   );
   final _codeController = TextEditingController();
   final _nameController = TextEditingController();
