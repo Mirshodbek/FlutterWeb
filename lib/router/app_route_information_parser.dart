@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:web_chat/screens/screens.dart';
 
-class AppRouteInformationParser extends RouteInformationParser<MyRoutes> {
+class AppRouteInformationParser extends RouteInformationParser<RoutePath> {
   @override
-  Future<MyRoutes> parseRouteInformation(
+  Future<RoutePath> parseRouteInformation(
       RouteInformation routeInformation) async {
     switch (routeInformation.location) {
       case "/register":
-        return MyRoutes.registerScreen;
+        return RoutePath(MyRoutes.registerScreen, routeInformation.state);
         break;
       case "/im?p=":
-        return MyRoutes.profileScreen;
+        return RoutePath(MyRoutes.profileScreen, routeInformation.state);
         break;
       default:
-        return MyRoutes.registerScreen;
+        return RoutePath(MyRoutes.registerScreen, routeInformation.state);
     }
   }
 
   @override
-  RouteInformation restoreRouteInformation(MyRoutes configuration) {
-    switch (configuration) {
+  RouteInformation restoreRouteInformation(RoutePath configuration) {
+    switch (configuration.myRoute) {
       case MyRoutes.registerScreen:
-        return const RouteInformation(location: '/register');
+        return RouteInformation(
+            location: '/register', state: configuration.pageAuth);
       case MyRoutes.profileScreen:
-        return const RouteInformation(location: '/im?p=');
+        return RouteInformation(
+            location: '/im?p=', state: configuration.pageAuth);
     }
     throw 'unknown';
   }

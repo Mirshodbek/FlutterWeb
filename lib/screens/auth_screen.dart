@@ -6,12 +6,48 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:web_chat/screens/screens.dart';
 
+class Auth extends StatefulWidget {
+  final PageAuth pageAuthTab;
+
+  Auth(this.pageAuthTab);
+
+  @override
+  _AuthState createState() => _AuthState();
+}
+
+class _AuthState extends State<Auth> {
+  @override
+  void didUpdateWidget(covariant Auth oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    context
+        .refresh(authorizationPro)
+        .pageAuth(pageAuth: widget.pageAuthTab, context: context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: AuthorizationScreen(),
+    );
+  }
+}
+
 class AuthorizationScreen extends ConsumerWidget {
   final _telephoneController = TextEditingController(
     text: "+998",
   );
   final _codeController = TextEditingController();
   final _nameController = TextEditingController();
+  final authorization = Authorization();
+
+  void save(BuildContext context) {
+    final MyRouterDelegate state =
+        Router.of(context).routerDelegate as MyRouterDelegate;
+
+    Router.navigate(context, () {
+      state.pageAuth = authorization.pageAuth;
+    });
+  }
 
   Widget _alertDialog(BuildContext context, String telephone) {
     return AlertDialog(
@@ -33,7 +69,8 @@ class AuthorizationScreen extends ConsumerWidget {
             await context
                 .read(authorizationPro)
                 .telephoneStep(telephone: telephone);
-            Navigator.pop(context);
+
+            Navigator.of(context).pop();
           },
           child: Text(
             "Ok",
@@ -45,6 +82,7 @@ class AuthorizationScreen extends ConsumerWidget {
             context
                 .read(authorizationPro)
                 .pageAuth(pageAuth: PageAuth.codePage);
+
             Navigator.pop(context);
           },
           child: Text(
@@ -69,6 +107,7 @@ class AuthorizationScreen extends ConsumerWidget {
             return _alertDialog(context, _telephone);
           },
         );
+        save(context);
       } else {
         context.read(helperAuthPro).invalidPhone();
       }
@@ -86,7 +125,7 @@ class AuthorizationScreen extends ConsumerWidget {
     if (auth.pageAuth == PageAuth.dataPage) {
       if (_name.isNotEmpty) {
         await context.read(authorizationPro).dataStep(name: _name);
-        (Router.of(context).routerDelegate as MyRouterDelegate).configuration =
+        (Router.of(context).routerDelegate as MyRouterDelegate).myRoutes =
             MyRoutes.profileScreen;
       } else {
         context.read(helperAuthPro).emptyName();

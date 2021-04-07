@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:web_chat/model/authorization.dart';
 import 'package:web_chat/model_view/model_vm.dart';
@@ -35,7 +36,7 @@ class AuthorizationVM extends StateNotifier<Authorization> {
         pathPhoto: pathPhoto, errorPhoto: errorPhoto, dataPhoto: dataPhoto);
   }
 
-  void pageAuth({PageAuth pageAuth}) {
+  void pageAuth({PageAuth pageAuth, BuildContext context}) {
     state = state.copyWith(pageAuth: pageAuth);
   }
 }

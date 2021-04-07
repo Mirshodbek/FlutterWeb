@@ -1,36 +1,44 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:web_chat/model/model.dart';
 import 'package:web_chat/screens/auth_screen.dart';
+import 'package:web_chat/screens/screens.dart';
 
-class MyRouterDelegate extends RouterDelegate<MyRoutes>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<MyRoutes> {
+class MyRouterDelegate extends RouterDelegate<RoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<RoutePath> {
   @override
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  MyRoutes get configuration => _configuration;
-  MyRoutes _configuration;
+  MyRoutes get myRoutes => _myRoutes;
+  MyRoutes _myRoutes;
 
-  set configuration(MyRoutes value) {
-    if (_configuration == value) return;
+  set myRoutes(MyRoutes value) {
+    if (_myRoutes == value) return;
+    _myRoutes = value;
+    notifyListeners();
+  }
 
-    _configuration = value;
+  PageAuth get pageAuth => _pageAuth;
+  PageAuth _pageAuth;
+  set pageAuth(PageAuth value) {
+    if (_pageAuth == value) return;
+    _pageAuth = value;
     notifyListeners();
   }
 
   @override
-  Future<void> setNewRoutePath(MyRoutes configuration) async {
-    _configuration = configuration;
+  Future<void> setNewRoutePath(RoutePath configuration) async {
+    _myRoutes = configuration.myRoute;
+    _pageAuth = configuration.pageAuth ?? PageAuth.phonePage;
   }
 
   // For web application
   @override
-  MyRoutes get currentConfiguration => configuration;
+  RoutePath get currentConfiguration => RoutePath(myRoutes, pageAuth);
 
   bool _handlePopPage(Route<dynamic> route, dynamic result) {
     final bool success = route.didPop(result);
     if (success) {
-      _configuration = MyRoutes.registerScreen;
+      _myRoutes = MyRoutes.registerScreen;
       notifyListeners();
     }
     return success;
@@ -43,11 +51,11 @@ class MyRouterDelegate extends RouterDelegate<MyRoutes>
       pages: <Page<void>>[
         MaterialPage(
           key: ValueKey('register'),
-          child: AuthorizationScreen(),
+          child: Auth(_pageAuth),
         ),
-        if (configuration == MyRoutes.profileScreen)
+        if (myRoutes == MyRoutes.profileScreen)
           MaterialPage(
-            key: ValueKey('profile'),
+            key: ValueKey('im?p='),
             child: ProfileScreen(),
           ),
       ],

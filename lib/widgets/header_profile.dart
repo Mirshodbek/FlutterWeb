@@ -16,14 +16,19 @@ class HeaderProfile extends ConsumerWidget {
             width: 350.0,
             child: PopupMenuButton(
               onSelected: (value) {
-                if (value == 1) {
-                  showDialog(
-                    context: context,
-                    builder: (dialog) {
+                showDialog(
+                  context: context,
+                  builder: (dialog) {
+                    if (value == 1)
                       return Contacts();
-                    },
-                  );
-                }
+                    else if (value == 0)
+                      return NewGroup();
+                    else if (value == 4)
+                      return About();
+                    else
+                      return SizedBox.shrink();
+                  },
+                );
               },
               offset: Offset(0.0, 50.0),
               color: Colors.white,
