@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_chat/widgets/widgets.dart';
+import 'package:web_chat/desktop/desktop.dart';
 
 class About extends StatelessWidget {
   @override

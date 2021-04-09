@@ -13,27 +13,41 @@ class ProfileScreen extends ConsumerWidget {
       backgroundColor: Color(0xFFE7EBF0),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
-        child: Center(
-          child: Container(
-            width: 1000.0,
-            child: Column(
-              children: [
-                HeaderProfile(),
-                SizedBox(
-                  height: 1.0,
-                ),
-                Container(
-                  color: Colors.white,
-                  height: MediaQuery.of(context).size.height * 0.9,
-                  child: Row(
-                    children: [
-                      LeftColumn(),
-                      RightColumn(),
-                    ],
+        child: Responsive(
+          desktop: Center(
+            child: Container(
+              width: (Responsive.isDesktop(context)) ? 1000.0 : double.infinity,
+              child: Column(
+                children: [
+                  HeaderProfile(),
+                  SizedBox(
+                    height: 1.0,
                   ),
-                ),
-              ],
+                  Container(
+                    color: Colors.white,
+                    height: MediaQuery.of(context).size.height * 0.9,
+                    child: Row(
+                      children: [
+                        LeftColumn(),
+                        RightColumn(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
+          ),
+          mobile: Column(
+            children: [
+              HeaderProfileMobile(),
+              SizedBox(
+                height: 5.0,
+              ),
+              Container(
+                height: Responsive.height(context),
+                child: LeftColumn(),
+              ),
+            ],
           ),
         ),
       ),

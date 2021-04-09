@@ -28,7 +28,7 @@ class MyRouterDelegate extends RouterDelegate<RoutePath>
   @override
   Future<void> setNewRoutePath(RoutePath configuration) async {
     _myRoutes = configuration.myRoute;
-    _pageAuth = configuration.pageAuth ?? PageAuth.phonePage;
+    _pageAuth = configuration.pageAuth;
   }
 
   // For web application

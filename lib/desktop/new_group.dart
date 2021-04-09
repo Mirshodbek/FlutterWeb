@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:web_chat/widgets/widgets.dart';
+import 'package:web_chat/desktop/desktop.dart';
 
 class NewGroup extends ConsumerWidget {
   void _cancel(BuildContext context) {

@@ -6,9 +6,14 @@ class PhoneAuth extends StatelessWidget {
   final double width;
   final double height;
   final String invalidPhone;
+  final Function onSubmit;
 
   PhoneAuth(
-      {this.telephoneController, this.width, this.height, this.invalidPhone});
+      {this.telephoneController,
+      this.width,
+      this.height,
+      this.invalidPhone,
+      this.onSubmit});
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +47,17 @@ class PhoneAuth extends StatelessWidget {
         SizedBox(
           width: width,
           child: TextField(
+            onSubmitted: onSubmit,
             maxLength: 13,
             key: UniqueKey(),
             inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp('[0-9+]'))
+              FilteringTextInputFormatter.allow(RegExp('[0-9+]')),
             ],
             style: TextStyle(
               fontSize: 30.0,
             ),
             decoration: InputDecoration(
+              counterText: "",
               errorText: invalidPhone,
               errorStyle: TextStyle(
                 fontSize: 20.0,

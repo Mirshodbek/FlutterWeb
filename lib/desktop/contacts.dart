@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:web_chat/screens/screens.dart';
-import 'package:web_chat/widgets/widgets.dart';
+import 'package:web_chat/desktop/desktop.dart';
 
 class Contacts extends ConsumerWidget {
   void _cancelDelete(BuildContext context) {
@@ -136,22 +135,23 @@ class Contacts extends ConsumerWidget {
             ),
           ),
         if (profile.edit == Edit.edit)
-          contactsVM.onPressed()
-              ? TextButton(
-                  onPressed: () => context.read(listContactsPro).delete(),
-                  child: Text(
-                    "Delete ${contactsVM.lengthDeletedContacts}",
-                    style: buttonStyle.copyWith(
-                      color: Colors.red,
-                    ),
-                  ),
-                )
-              : SelectableText(
-                  "Delete 0",
-                  style: buttonStyle.copyWith(
-                    color: Colors.red,
-                  ),
-                ),
+          // contactsVM.onPressed()
+          //     ?
+          TextButton(
+            onPressed: () => context.read(listContactsPro).delete(),
+            child: Text(
+              "Delete ${contactsVM.lengthDeletedContacts}",
+              style: buttonStyle.copyWith(
+                color: Colors.red,
+              ),
+            ),
+          )
+        // : SelectableText(
+        //     "Delete 0",
+        //     style: buttonStyle.copyWith(
+        //       color: Colors.red,
+        //     ),
+        //   ),
       ],
       actionsPadding: EdgeInsets.only(bottom: 15.0),
     );

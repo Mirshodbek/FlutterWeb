@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:web_chat/widgets/widgets.dart';
+import 'package:web_chat/desktop/desktop.dart';
 
 class HeaderProfile extends ConsumerWidget {
   @override
@@ -61,18 +61,6 @@ class HeaderProfile extends ConsumerWidget {
               ),
             ),
           ),
-          IconButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {},
-            icon: Icon(
-              Icons.search,
-              size: 35.0,
-              color: Colors.white,
-            ),
-          ),
-          SizedBox(
-            width: 15.0,
-          ),
           PopupMenuButton(
             offset: Offset(5.0, 45.0),
             color: Colors.white,
@@ -82,9 +70,6 @@ class HeaderProfile extends ConsumerWidget {
               size: 35.0,
             ),
             itemBuilder: (context) => PopUpMenuRight.expansionTiles,
-          ),
-          SizedBox(
-            width: 10.0,
           ),
         ],
       ),

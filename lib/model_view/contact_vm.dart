@@ -6,6 +6,21 @@ class ListContacts extends StateNotifier<List<Profile>> {
   List<Profile> _selectedContacts = [];
 
   void selectContact(int index) {
+    final _select = _selectedContacts.contains(state[index]);
+    if (_select) {
+      toggle(index);
+      _selectedContacts.remove(state[index]);
+    } else {
+      toggle(index);
+      _selectedContacts.add(state[index]);
+    }
+  }
+
+  int get lengthDeletedContacts {
+    return _selectedContacts.length;
+  }
+
+  void toggle(int index) {
     state = [
       for (final contact in state)
         if (contact.index == state[index].index)
@@ -18,12 +33,6 @@ class ListContacts extends StateNotifier<List<Profile>> {
         else
           contact,
     ];
-    final _select = _selectedContacts.contains(state[index]);
-    if (_select) {
-      _selectedContacts.remove(state[index]);
-    } else {
-      _selectedContacts.add(state[index]);
-    }
   }
 
   void cancelDelete() {
@@ -77,10 +86,6 @@ class ListContacts extends StateNotifier<List<Profile>> {
       return true;
     else
       return false;
-  }
-
-  int get lengthDeletedContacts {
-    return _selectedContacts.length;
   }
 
   int get lengthContacts {

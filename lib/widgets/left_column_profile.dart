@@ -8,7 +8,8 @@ class LeftColumn extends ConsumerWidget {
     final profiles = watch(listProfilePro.state).toList();
     final profile = watch(helperPRPro.state);
     return SizedBox(
-      width: 350.0,
+      width:
+          (Responsive.isDesktop(context)) ? 350.0 : Responsive.width(context),
       child: Column(
         children: [
           Container(

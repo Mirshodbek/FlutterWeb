@@ -1,3 +1,4 @@
+export 'package:web_chat/desktop/desktop.dart';
 export 'package:web_chat/model/authorization.dart';
 export 'package:web_chat/model/helper_auth.dart';
 export 'package:web_chat/model/helper_pr.dart';

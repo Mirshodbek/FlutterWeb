@@ -1,0 +1,12 @@
+export 'package:web_chat/desktop/about.dart';
+export 'package:web_chat/desktop/contacts.dart';
+export 'package:web_chat/desktop/header_profile.dart';
+export 'package:web_chat/desktop/new_contact.dart';
+export 'package:web_chat/desktop/new_group.dart';
+export 'package:web_chat/desktop/pop_up_menu_left.dart';
+export 'package:web_chat/desktop/right_column_profile.dart';
+export 'package:web_chat/mobile/mobile.dart';
+export 'package:web_chat/model_view/profile_vm.dart';
+export 'package:web_chat/screens/screens.dart';
+export 'package:web_chat/widgets/left_column_profile.dart';
+export 'package:web_chat/widgets/widgets.dart';

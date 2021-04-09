@@ -1,3 +1,4 @@
+export 'package:web_chat/desktop/desktop.dart';
 export 'package:web_chat/model/model.dart';
 export 'package:web_chat/model_view/authorization_vm.dart';
 export 'package:web_chat/model_view/contact_vm.dart';

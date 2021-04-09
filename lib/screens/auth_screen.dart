@@ -19,9 +19,7 @@ class _AuthState extends State<Auth> {
   @override
   void didUpdateWidget(covariant Auth oldWidget) {
     super.didUpdateWidget(oldWidget);
-    context
-        .refresh(authorizationPro)
-        .pageAuth(pageAuth: widget.pageAuthTab, context: context);
+    context.refresh(authorizationPro).pageAuth(pageAuth: widget.pageAuthTab);
   }
 
   @override
@@ -51,19 +49,39 @@ class AuthorizationScreen extends ConsumerWidget {
 
   Widget _alertDialog(BuildContext context, String telephone) {
     return AlertDialog(
-      actionsPadding: EdgeInsets.all(10.0),
-      titlePadding: EdgeInsets.all(20.0),
-      title: Text(
-        "Is it correct?",
+      actionsPadding: EdgeInsets.all(15.0),
+      contentPadding: EdgeInsets.only(bottom: 50.0, top: 30.0),
+      titlePadding: EdgeInsets.only(top: 90.0, left: 90.0, right: 90.0),
+      title: SelectableText(
+        "Is this phone number correct?",
+        maxLines: 1,
         style: TextStyle(
-          fontSize: 40.0,
+          fontSize: 22.0,
         ),
       ),
-      content: Text(
+      content: SelectableText(
         telephone,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontWeight: FontWeight.w900,
+          fontSize: 22.0,
+        ),
       ),
       actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            "CANCEL",
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF72a0c7),
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 20.0,
+        ),
         TextButton(
           onPressed: () async {
             await context
@@ -73,21 +91,11 @@ class AuthorizationScreen extends ConsumerWidget {
             Navigator.of(context).pop();
           },
           child: Text(
-            "Ok",
-            style: TextStyle(fontSize: 20.0),
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            context
-                .read(authorizationPro)
-                .pageAuth(pageAuth: PageAuth.codePage);
-
-            Navigator.pop(context);
-          },
-          child: Text(
-            "Cancel",
-            style: TextStyle(fontSize: 20.0),
+            "OK",
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],
@@ -98,7 +106,7 @@ class AuthorizationScreen extends ConsumerWidget {
     final _telephone = _telephoneController.text;
     final _code = _codeController.text;
     final _name = _nameController.text;
-
+    save(context);
     if (auth.pageAuth == PageAuth.phonePage) {
       if (_telephone.length >= 13) {
         showDialog(
@@ -107,7 +115,6 @@ class AuthorizationScreen extends ConsumerWidget {
             return _alertDialog(context, _telephone);
           },
         );
-        save(context);
       } else {
         context.read(helperAuthPro).invalidPhone();
       }
@@ -192,8 +199,9 @@ class AuthorizationScreen extends ConsumerWidget {
           Align(
             alignment: Alignment.center,
             child: SingleChildScrollView(
-              child: Container(
-                color: Colors.white,
+              padding: EdgeInsets.zero,
+              child: Card(
+                elevation: 20.0,
                 child: Responsive(
                   desktop: IntrinsicHeight(
                     child: IntrinsicWidth(
@@ -201,19 +209,22 @@ class AuthorizationScreen extends ConsumerWidget {
                         children: [
                           HeaderAuth(
                             () => nextPage(context, auth),
+                            500.0,
                           ),
                           SizedBox(
                             height: 15.0,
                           ),
                           if (auth.pageAuth == PageAuth.phonePage)
                             PhoneAuth(
+                              onSubmit: (_) => nextPage(context, auth),
                               invalidPhone: helperAuth.invalidPhone,
                               telephoneController: _telephoneController,
-                              width: 300.0,
+                              width: 280.0,
                               height: 40.0,
                             ),
                           if (auth.pageAuth == PageAuth.codePage)
                             CodeAuth(
+                              onSubmit: (_) => nextPage(context, auth),
                               invalidCode: helperAuth.invalidCode,
                               auth: auth,
                               previousPage: () => previousPage(context),
@@ -223,6 +234,7 @@ class AuthorizationScreen extends ConsumerWidget {
                             ),
                           if (auth.pageAuth == PageAuth.dataPage)
                             DataWidget(
+                              onSubmit: (_) => nextPage(context, auth),
                               emptyName: helperAuth.emptyName,
                               auth: auth,
                               selectImage: () => pickImage(context),
@@ -238,12 +250,14 @@ class AuthorizationScreen extends ConsumerWidget {
                       children: [
                         HeaderAuth(
                           () => nextPage(context, auth),
+                          double.infinity,
                         ),
                         SizedBox(
                           height: 15.0,
                         ),
                         if (auth.pageAuth == PageAuth.phonePage)
                           PhoneAuth(
+                            onSubmit: (_) => nextPage(context, auth),
                             invalidPhone: helperAuth.invalidPhone,
                             telephoneController: _telephoneController,
                             width: 300.0,
@@ -251,6 +265,7 @@ class AuthorizationScreen extends ConsumerWidget {
                           ),
                         if (auth.pageAuth == PageAuth.codePage)
                           CodeAuth(
+                            onSubmit: (_) => nextPage(context, auth),
                             invalidCode: helperAuth.invalidCode,
                             auth: auth,
                             previousPage: () => previousPage(context),
@@ -260,6 +275,7 @@ class AuthorizationScreen extends ConsumerWidget {
                           ),
                         if (auth.pageAuth == PageAuth.dataPage)
                           DataWidget(
+                            onSubmit: (_) => nextPage(context, auth),
                             emptyName: helperAuth.emptyName,
                             auth: auth,
                             selectImage: () => pickImage(context),

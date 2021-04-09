@@ -9,6 +9,7 @@ class CodeAuth extends StatelessWidget {
   final double width;
   final double height;
   final String invalidCode;
+  final Function onSubmit;
 
   CodeAuth({
     this.auth,
@@ -17,6 +18,7 @@ class CodeAuth extends StatelessWidget {
     this.width,
     this.height,
     this.invalidCode,
+    this.onSubmit,
   });
 
   @override
@@ -27,7 +29,7 @@ class CodeAuth extends StatelessWidget {
           height: height,
         ),
         SelectableText(
-          auth.telephone,
+          "${auth.telephone}",
           style: TextStyle(
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
@@ -74,12 +76,14 @@ class CodeAuth extends StatelessWidget {
         SizedBox(
           width: width,
           child: TextField(
+            onSubmitted: onSubmit,
             maxLength: 4,
             controller: codeController,
             style: TextStyle(
               fontSize: 30.0,
             ),
             decoration: InputDecoration(
+              counterText: "",
               errorText: invalidCode,
               hintStyle: TextStyle(
                 fontSize: 20.0,

@@ -6,9 +6,14 @@ class DataWidget extends StatelessWidget {
   final Function selectImage;
   final Authorization auth;
   final String emptyName;
+  final Function onSubmit;
 
   DataWidget(
-      {this.nameController, this.selectImage, this.auth, this.emptyName});
+      {this.nameController,
+      this.selectImage,
+      this.auth,
+      this.emptyName,
+      this.onSubmit});
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +47,7 @@ class DataWidget extends StatelessWidget {
           SizedBox(
             height: 50.0,
             child: TextField(
+              onSubmitted: onSubmit,
               key: UniqueKey(),
               style: TextStyle(
                 fontSize: 20.0,
