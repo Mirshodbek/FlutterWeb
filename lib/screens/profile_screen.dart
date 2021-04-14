@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:web_chat/screens/screens.dart';
 
-class ProfileScreen extends ConsumerWidget {
+class ProfileScreen extends StatelessWidget {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  Widget build(BuildContext context, watch) {
+  Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Color(0xFFE7EBF0),

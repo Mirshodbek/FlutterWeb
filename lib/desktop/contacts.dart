@@ -10,7 +10,9 @@ class Contacts extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, watch) {
-    final contactListVM = watch(listContactsPro.state).toList();
+    final contactListVM = watch(listContactsPro.state)
+        .where((element) => !element.hidden)
+        .toList();
     final contactsVM = watch(listContactsPro);
     final profile = watch(helperPRPro.state);
 
@@ -98,7 +100,7 @@ class Contacts extends ConsumerWidget {
                   key: ObjectKey(contactListVM[i]),
                   onPressed: () {
                     if (profile.edit == Edit.edit)
-                      context.read(listContactsPro).selectContact(i);
+                      context.read(listContactsPro).toggleContact(i);
                     else
                       return;
                   },
@@ -108,6 +110,7 @@ class Contacts extends ConsumerWidget {
                         : Colors.white,
                   ),
                   child: ProfileUser(
+                    dateTime: SizedBox.shrink(),
                     profiles: contactListVM[i],
                     textWidget: Text(
                       "last seen recently",
@@ -135,23 +138,22 @@ class Contacts extends ConsumerWidget {
             ),
           ),
         if (profile.edit == Edit.edit)
-          // contactsVM.onPressed()
-          //     ?
-          TextButton(
-            onPressed: () => context.read(listContactsPro).delete(),
-            child: Text(
-              "Delete ${contactsVM.lengthDeletedContacts}",
-              style: buttonStyle.copyWith(
-                color: Colors.red,
-              ),
-            ),
-          )
-        // : SelectableText(
-        //     "Delete 0",
-        //     style: buttonStyle.copyWith(
-        //       color: Colors.red,
-        //     ),
-        //   ),
+          contactsVM.onPressed()
+              ? TextButton(
+                  onPressed: () => context.read(listContactsPro).delete(),
+                  child: Text(
+                    "Delete ${contactsVM.lengthDeletedContacts}",
+                    style: buttonStyle.copyWith(
+                      color: Colors.red,
+                    ),
+                  ),
+                )
+              : SelectableText(
+                  "Delete 0",
+                  style: buttonStyle.copyWith(
+                    color: Colors.red,
+                  ),
+                ),
       ],
       actionsPadding: EdgeInsets.only(bottom: 15.0),
     );

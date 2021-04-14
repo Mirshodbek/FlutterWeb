@@ -1,60 +1,92 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:web_chat/desktop/desktop.dart';
 
 class RightColumn extends ConsumerWidget {
   final _messageController = TextEditingController();
 
+  void _send(BuildContext context, int index) async {
+    final messages = _messageController.text;
+    if (messages.isNotEmpty) {
+      final time = await context.read(listMessagesPro).add(messages);
+      if (time) context.read(listProfilePro).changeDateTime(index, messages);
+    }
+    _messageController.clear();
+  }
+
   @override
   Widget build(BuildContext context, watch) {
-    // final profiles = watch(listProfilePro.state).toList();
-    // final index = watch(helperPRPro.state);
-    // final userPhoto = profiles[index.index];
+    final profiles = watch(listProfilePro.state).toList();
+    final helper = watch(helperPRPro.state);
+    final profile = profiles[helper.index];
+
+    final messages = watch(listMessagesPro.state).reversed.toList();
     return Expanded(
       child: Stack(
         children: [
-          // ListView(
-          //   padding: EdgeInsets.only(bottom: 200.0),
-          //   children: List.generate(
-          //     message.messages.length ?? 0,
-          //     (index) {
-          //       return Padding(
-          //         padding: EdgeInsets.only(top: 10.0),
-          //         child: Row(
-          //           mainAxisAlignment: MainAxisAlignment.start,
-          //           children: [
-          //             CircleAvatar(
-          //               radius: 30.0,
-          //               backgroundImage: NetworkImage(message.photoPath),
-          //             ),
-          //             SizedBox(
-          //               width: 10.0,
-          //             ),
-          //             Expanded(
-          //               child: Column(
-          //                 mainAxisAlignment: MainAxisAlignment.start,
-          //                 mainAxisSize: MainAxisSize.min,
-          //                 crossAxisAlignment: CrossAxisAlignment.stretch,
-          //                 children: [
-          //                   Text(
-          //                     message.name,
-          //                     style: TextStyle(
-          //                       fontSize: 18.0,
-          //                       fontWeight: FontWeight.bold,
-          //                     ),
-          //                   ),
-          //                   SizedBox(
-          //                     height: 15.0,
-          //                   ),
-          //                   Text(message.messages[index].message),
-          //                 ],
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       );
-          //     },
-          //   ),
-          // ),
+          ListView(
+            reverse: true,
+            padding: EdgeInsets.only(bottom: 200.0, left: 80.0, right: 80.0),
+            children: List.generate(
+              messages.length ?? 0,
+              (index) {
+                final message = messages[index];
+                return Padding(
+                  padding: EdgeInsets.only(top: 30.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        radius: 30.0,
+                        backgroundImage: (helper.dataPhoto != null)
+                            ? MemoryImage(helper.dataPhoto)
+                            : NetworkImage(
+                                (message.users == Users.isMe)
+                                    ? defaultPhotoUser
+                                    : profile.photoPath,
+                              ),
+                      ),
+                      SizedBox(
+                        width: 10.0,
+                      ),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SelectableText(
+                                  (helper.name != null)
+                                      ? helper.name
+                                      : (message.users == Users.isMe)
+                                          ? "Mirshod"
+                                          : profile.name,
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(DateFormat.jms().format(message.dateTime)),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 15.0,
+                            ),
+                            SelectableText(message.message),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -65,7 +97,9 @@ class RightColumn extends ConsumerWidget {
                 children: [
                   CircleAvatar(
                     radius: 30.0,
-                    backgroundColor: Colors.black,
+                    backgroundImage: (helper.dataPhoto != null)
+                        ? MemoryImage(helper.dataPhoto)
+                        : NetworkImage(defaultPhotoUser),
                   ),
                   SizedBox(
                     width: 15.0,
@@ -77,6 +111,7 @@ class RightColumn extends ConsumerWidget {
                         TextField(
                           key: UniqueKey(),
                           controller: _messageController,
+                          autofocus: true,
                           minLines: 2,
                           maxLines: 3,
                           decoration: InputDecoration(
@@ -131,9 +166,7 @@ class RightColumn extends ConsumerWidget {
                               ),
                             ),
                             TextButton(
-                              onPressed: () {
-                                _messageController.clear();
-                              },
+                              onPressed: () => _send(context, helper.index),
                               child: Text(
                                 "Send",
                                 style: TextStyle(
@@ -153,7 +186,7 @@ class RightColumn extends ConsumerWidget {
                   SizedBox(
                     width: 15.0,
                   ),
-                  // circleAvatar(userPhoto.photoPath),
+                  circleAvatar(profile.photoPath),
                 ],
               ),
             ),

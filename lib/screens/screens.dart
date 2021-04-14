@@ -1,5 +1,7 @@
+export 'package:web_chat/constants/const_string.dart';
 export 'package:web_chat/desktop/desktop.dart';
 export 'package:web_chat/enum/enums.dart';
+export 'package:web_chat/global_widgets/global_widgets.dart';
 export 'package:web_chat/model/model.dart';
 export 'package:web_chat/model_view/model_vm.dart';
 export 'package:web_chat/responsive.dart';

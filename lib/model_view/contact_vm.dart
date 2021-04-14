@@ -3,82 +3,76 @@ import 'package:web_chat/widgets/widgets.dart';
 
 class ListContacts extends StateNotifier<List<Profile>> {
   ListContacts([List<Profile> state]) : super(state ?? []);
-  List<Profile> _selectedContacts = [];
 
-  void selectContact(int index) {
-    final _select = _selectedContacts.contains(state[index]);
-    if (_select) {
-      toggle(index);
-      _selectedContacts.remove(state[index]);
-    } else {
-      toggle(index);
-      _selectedContacts.add(state[index]);
-    }
+  void toggleContact(int index) {
+    final _state = state;
+    final contact = state[index];
+    _state[index] = Profile(
+      lastMessage: _state[index].lastMessage,
+      dateTime: _state[index].dateTime,
+      name: contact.name,
+      isSelected: !contact.isSelected,
+      photoPath: contact.photoPath,
+      messages: contact.messages,
+    );
+    state = _state;
   }
 
   int get lengthDeletedContacts {
-    return _selectedContacts.length;
-  }
-
-  void toggle(int index) {
-    state = [
-      for (final contact in state)
-        if (contact.index == state[index].index)
-          Profile(
-            index: contact.index,
-            name: contact.name,
-            isSelected: !contact.isSelected,
-            photoPath: contact.photoPath,
-          )
-        else
-          contact,
-    ];
+    return state.where((element) => element.isSelected).length;
   }
 
   void cancelDelete() {
-    state = [
-      for (final contact in state)
-        if (contact.isSelected)
-          Profile(
-            index: contact.index,
-            name: contact.name,
-            isSelected: !contact.isSelected,
-            photoPath: contact.photoPath,
-          )
-        else
-          contact
-    ];
-    _selectedContacts = [];
+    final _state = state;
+    for (int i = 0; i < _state.length; i++)
+      if (_state[i].isSelected) {
+        _state[i] = Profile(
+          lastMessage: _state[i].lastMessage,
+          dateTime: _state[i].dateTime,
+          name: _state[i].name,
+          isSelected: !_state[i].isSelected,
+          photoPath: _state[i].photoPath,
+          messages: _state[i].messages,
+        );
+      }
   }
 
   void add({String name}) {
     state = [
       ...state,
       Profile(
-          index: state.length + 1,
-          isSelected: false,
-          name: name,
-          photoPath:
-              "https://user-images.githubusercontent.com/36184953/112576803-d4772400-8e14-11eb-8a38-310d33d306fa.png"),
+        lastMessage: " ",
+        dateTime: DateTime.now(),
+        name: name,
+        photoPath:
+            "https://user-images.githubusercontent.com/36184953/112576803-d4772400-8e14-11eb-8a38-310d33d306fa.png",
+        messages: <Messages>[],
+      ),
     ];
-    searchListView = state;
   }
 
   void search(String query) {
-    state = searchListView.where((contacts) {
-      final titleLower = contacts.name.toLowerCase();
+    final _state = state;
+    for (int i = 0; i < _state.length; i++) {
+      final titleLower = _state[i].name.toLowerCase();
       final searchLower = query.toLowerCase();
-      return titleLower.contains(searchLower);
-    }).toList();
+
+      _state[i] = Profile(
+        dateTime: _state[i].dateTime,
+        lastMessage: _state[i].lastMessage,
+        name: _state[i].name,
+        isSelected: _state[i].isSelected,
+        photoPath: _state[i].photoPath,
+        hidden: !titleLower.contains(searchLower),
+        messages: _state[i].messages,
+      );
+    }
+    state = _state;
   }
 
   void delete() {
-    for (int i = 0; i < _selectedContacts.length; i++)
-      state =
-          state.where((element) => element != _selectedContacts[i]).toList();
-
-    searchListView = state;
-    _selectedContacts = [];
+    final _state = state;
+    state = _state.where((element) => !element.isSelected).toList();
   }
 
   bool onPressed() {
@@ -87,11 +81,6 @@ class ListContacts extends StateNotifier<List<Profile>> {
     else
       return false;
   }
-
-  int get lengthContacts {
-    return state.length;
-  }
 }
 
-final listContactsPro =
-    StateNotifierProvider((ref) => ListContacts(searchListView));
+final listContactsPro = StateNotifierProvider((ref) => ListContacts(listUsers));

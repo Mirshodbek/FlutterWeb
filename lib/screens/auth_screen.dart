@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:web_chat/screens/screens.dart';
@@ -132,6 +131,7 @@ class AuthorizationScreen extends ConsumerWidget {
     if (auth.pageAuth == PageAuth.dataPage) {
       if (_name.isNotEmpty) {
         await context.read(authorizationPro).dataStep(name: _name);
+        context.read(helperPRPro).nameUser(_name);
         (Router.of(context).routerDelegate as MyRouterDelegate).myRoutes =
             MyRoutes.profileScreen;
       } else {
@@ -166,6 +166,7 @@ class AuthorizationScreen extends ConsumerWidget {
               dataPhoto: base64.decode(stripped),
               errorPhoto: '',
             );
+        context.read(helperPRPro).userPhoto(base64.decode(stripped));
       });
     });
 

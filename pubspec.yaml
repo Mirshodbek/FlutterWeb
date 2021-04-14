@@ -16,6 +16,7 @@ dependencies:
   flutter_riverpod: ^0.13.1
   cupertino_icons: ^1.0.2
   universal_html: ^2.0.4
+  intl: ^0.17.0
 
 
 

@@ -5,9 +5,9 @@ import 'package:web_chat/desktop/desktop.dart';
 class HeaderProfile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, watch) {
-    // final profiles = watch(listProfilePro.state).toList();
-    // final index = watch(helperPRPro.state);
-    // final profileName = profiles[index.index];
+    final profiles = watch(listProfilePro.state).toList();
+    final index = watch(helperPRPro.state);
+    final profileName = profiles[index.index];
     return Container(
       color: Color(0xFF497799),
       child: Row(
@@ -53,7 +53,7 @@ class HeaderProfile extends ConsumerWidget {
           ),
           Expanded(
             child: Text(
-              " profileName.name",
+              profileName.name,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20.0,

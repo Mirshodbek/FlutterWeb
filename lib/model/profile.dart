@@ -7,28 +7,31 @@ class Profile {
   final String name;
   final String photoPath;
   final DateTime dateTime;
-  final int index;
   final bool isSelected;
+  final bool hidden;
   final String nickName;
+  final String lastMessage;
   final List<Messages> messages;
 
   Profile(
       {this.name,
       this.photoPath,
       this.messages,
-      this.index,
       this.dateTime,
       this.nickName,
-      this.isSelected});
+      this.lastMessage,
+      this.isSelected = false,
+      this.hidden = false});
 
   Profile.initial(
       {this.name,
       this.photoPath,
       this.messages,
       this.dateTime,
-      this.index,
+      this.lastMessage,
       this.nickName})
-      : isSelected = false;
+      : isSelected = false,
+        hidden = false;
 
   Profile copyWith({List<Messages> messages}) {
     return Profile(
@@ -41,61 +44,123 @@ class Profile {
       identical(this, other) ||
       other is Profile &&
           runtimeType == other.runtimeType &&
-          index == other.index &&
           photoPath == other.photoPath &&
           name == other.name &&
           messages == other.messages &&
           dateTime == other.dateTime &&
+          nickName == other.nickName &&
+          hidden == other.hidden &&
           isSelected == other.isSelected;
 
   @override
   int get hashCode =>
-      index.hashCode ^
       photoPath.hashCode ^
       name.hashCode ^
       messages.hashCode ^
       dateTime.hashCode ^
+      hidden.hashCode ^
+      nickName.hashCode ^
       isSelected.hashCode;
 }
 
-List<Profile> searchListView = <Profile>[
+List<Profile> listUsers = <Profile>[
   Profile(
+    lastMessage: " ",
+    dateTime: DateTime.now(),
     nickName: "@john",
-    isSelected: false,
-    index: 0,
     name: 'John',
     photoPath:
         "https://user-images.githubusercontent.com/36184953/112576803-d4772400-8e14-11eb-8a38-310d33d306fa.png",
     messages: [],
   ),
   Profile(
+    lastMessage: "Yaxshi",
+    dateTime: DateTime.now().subtract(Duration(hours: 3)),
     nickName: "@madina",
-    isSelected: false,
-    index: 1,
     name: "Madina",
     photoPath:
         "https://user-images.githubusercontent.com/36184953/112577029-5e26f180-8e15-11eb-82ca-8de9bad5c48a.png",
     messages: [
-      // Messages(message: "Qalaysan"),
-      // Messages(message: "Yaxshi"),
+      Messages(
+        users: Users.isNotMe,
+        message: "Qalaysan",
+        dateTime: DateTime.now().subtract(Duration(hours: 5)),
+      ),
+      Messages(
+        users: Users.isMe,
+        message: "Yaxshi",
+        dateTime: DateTime.now().subtract(Duration(hours: 3)),
+      ),
     ],
   ),
   Profile(
+    lastMessage: "Yaxshi",
+    dateTime: DateTime.now().subtract(Duration(hours: 2)),
     nickName: "@muhayyo",
-    isSelected: false,
-    index: 2,
     name: "Muhayyo",
     photoPath:
         "https://user-images.githubusercontent.com/36184953/112577138-9c241580-8e15-11eb-80e3-d81bf3fe5f18.png",
-    messages: [],
+    messages: [
+      Messages(
+        users: Users.isNotMe,
+        message: "Qalaysan",
+        dateTime: DateTime.now().subtract(Duration(hours: 8)),
+      ),
+      Messages(
+        users: Users.isMe,
+        message: "Yaxshi",
+        dateTime: DateTime.now().subtract(Duration(hours: 7)),
+      ),
+      Messages(
+        users: Users.isNotMe,
+        message: "Qalaysan",
+        dateTime: DateTime.now().subtract(Duration(hours: 6)),
+      ),
+      Messages(
+        users: Users.isMe,
+        message: "Yaxshi",
+        dateTime: DateTime.now().subtract(Duration(hours: 2)),
+      ),
+    ],
   ),
   Profile(
+    lastMessage: "Yaxshi",
+    dateTime: DateTime.now(),
     nickName: "@musharraf",
-    isSelected: false,
-    index: 3,
     name: "Musharraf",
     photoPath:
         "https://user-images.githubusercontent.com/36184953/112577418-1fde0200-8e16-11eb-9a05-37a844bfd0de.png",
-    messages: [],
+    messages: [
+      Messages(
+        users: Users.isNotMe,
+        message: "Qalaysan",
+        dateTime: DateTime.now().subtract(Duration(hours: 10)),
+      ),
+      Messages(
+        users: Users.isMe,
+        message: "Yaxshi",
+        dateTime: DateTime.now().subtract(Duration(hours: 7)),
+      ),
+      Messages(
+        users: Users.isNotMe,
+        message: "Qalaysan",
+        dateTime: DateTime.now().subtract(Duration(hours: 5)),
+      ),
+      Messages(
+        users: Users.isMe,
+        message: "Yaxshi",
+        dateTime: DateTime.now().subtract(Duration(hours: 3)),
+      ),
+      Messages(
+        users: Users.isNotMe,
+        message: "Qalaysan",
+        dateTime: DateTime.now().subtract(Duration(hours: 1)),
+      ),
+      Messages(
+        users: Users.isMe,
+        message: "Yaxshi",
+        dateTime: DateTime.now(),
+      ),
+    ],
   ),
 ];

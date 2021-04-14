@@ -76,13 +76,14 @@ class NewGroup extends ConsumerWidget {
                 TextButton(
                   key: ObjectKey(contactListVM[i]),
                   onPressed: () =>
-                      context.read(listContactsPro).selectContact(i),
+                      context.read(listContactsPro).toggleContact(i),
                   style: TextButton.styleFrom(
                     backgroundColor: contactListVM[i].isSelected
                         ? Colors.blue
                         : Colors.white,
                   ),
                   child: ProfileUser(
+                    dateTime: SizedBox.shrink(),
                     profiles: contactListVM[i],
                     textWidget: Text(
                       "last seen recently",

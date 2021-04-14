@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:web_chat/widgets/widgets.dart';
 
 class LeftColumn extends ConsumerWidget {
   @override
   Widget build(BuildContext context, watch) {
-    final profiles = watch(listProfilePro.state).toList();
+    final profiles = watch(listProfilePro.state)
+        .where((element) => !element.hidden)
+        .toList();
     final profile = watch(helperPRPro.state);
     return SizedBox(
-      width:
-          (Responsive.isDesktop(context)) ? 350.0 : Responsive.width(context),
+      width: Responsive.isDesktop(context) ? 350.0 : Responsive.width(context),
       child: Column(
         children: [
           Container(
@@ -55,20 +57,31 @@ class LeftColumn extends ConsumerWidget {
                         profile.index == index ? Colors.blue : Colors.white,
                   ),
                   child: ProfileUser(
+                    dateTime: Text(
+                      DateFormat.jm().format((profileUser.dateTime)),
+                      style: textStyleIndex(
+                        index: profile.index == index,
+                        firstColor: Colors.white,
+                        secondColor: Colors.black38,
+                      ).copyWith(
+                        fontWeight: FontWeight.w100,
+                      ),
+                    ),
                     index: index,
                     profiles: profileUser,
-                    textWidget: RichText(
-                      text: TextSpan(
+                    textWidget: Text.rich(
+                      TextSpan(
                         children: [
                           TextSpan(
-                            text: "You:",
+                            text: "You: ",
                             style: textStyleIndex(
-                                index: profile.index == index,
-                                firstColor: Colors.white,
-                                secondColor: Colors.blue),
+                              index: profile.index == index,
+                              firstColor: Colors.white,
+                              secondColor: Colors.blue,
+                            ),
                           ),
                           TextSpan(
-                            text: " Rahmat Yaxshi",
+                            text: profileUser.lastMessage,
                             style: textStyleIndex(
                               index: profile.index == index,
                               firstColor: Colors.white,
@@ -77,6 +90,7 @@ class LeftColumn extends ConsumerWidget {
                           ),
                         ],
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 );

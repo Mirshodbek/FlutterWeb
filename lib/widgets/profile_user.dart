@@ -5,11 +5,13 @@ import 'package:web_chat/widgets/widgets.dart';
 class ProfileUser extends ConsumerWidget {
   final Profile profiles;
   final Widget textWidget;
+  final Widget dateTime;
   final int index;
 
   ProfileUser({
     @required this.profiles,
     @required this.textWidget,
+    this.dateTime,
     this.index,
   });
 
@@ -29,12 +31,18 @@ class ProfileUser extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                profiles.name,
-                style: textStyleIndex(
-                    index: profile.index == index,
-                    firstColor: Colors.white,
-                    secondColor: Colors.black),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    profiles.name,
+                    style: textStyleIndex(
+                        index: profile.index == index,
+                        firstColor: Colors.white,
+                        secondColor: Colors.black),
+                  ),
+                  dateTime,
+                ],
               ),
               SizedBox(
                 height: 10.0,
@@ -43,6 +51,9 @@ class ProfileUser extends ConsumerWidget {
             ],
           ),
         ),
+        SizedBox(
+          width: 15.0,
+        )
       ],
     );
   }

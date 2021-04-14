@@ -30,8 +30,7 @@ class DataWidget extends StatelessWidget {
               radius: 80.0,
               backgroundImage: (auth.dataPhoto != null)
                   ? MemoryImage(auth.dataPhoto)
-                  : NetworkImage(
-                      "https://user-images.githubusercontent.com/36184953/107140001-0275d700-6941-11eb-9766-2605c4948e27.jpg"),
+                  : NetworkImage(defaultPhotoUser),
               child: (auth.dataPhoto == null)
                   ? Icon(
                       Icons.add_a_photo_outlined,
