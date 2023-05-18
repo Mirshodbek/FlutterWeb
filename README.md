@@ -19,3 +19,5 @@ https://demodylink.page.link/3N7P
 
 https://rithm-time.tv/#section=digitalBooks&material=11433&
 https://rithm-time.tv/some_word/ 
+
+https://rithm-time.tv/auth/?change_password=yes&lang=ru&USER_CHECKWORD=c4091e667dc48a71252fb0451d5dc234
