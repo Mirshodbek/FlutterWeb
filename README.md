@@ -22,4 +22,4 @@ https://rithm-time.tv/some_word/
 
 https://rithm-time.tv/auth/?change_password=yes&lang=ru&USER_CHECKWORD=c4091e667dc48a71252fb0451d5dc234
 
-https://rithmtime.page.link/181D
+https://rithmtime.page.link
